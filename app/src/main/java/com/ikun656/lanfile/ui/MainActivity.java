@@ -1,12 +1,12 @@
 package com.ikun656.lanfile.ui;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.Settings;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -20,6 +20,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import com.google.android.material.tabs.TabLayout;
+import com.ikun656.lanfile.BuildConfig;
 import com.ikun656.lanfile.R;
 import com.ikun656.lanfile.databinding.ActivityMainBinding;
 import com.ikun656.lanfile.net.LanNet;
@@ -86,6 +87,40 @@ public class MainActivity extends AppCompatActivity {
         b.listDevices.setOnItemClickListener((parent, view, pos, id) -> {
             if (pos < beacons.size()) receiveFrom(beacons.get(pos));
         });
+
+        setupBottomNav();
+    }
+
+    private void setupBottomNav() {
+        b.bottomNav.setOnItemSelectedListener(item -> {
+            int id = item.getItemId();
+            if (id == R.id.nav_tool) {
+                showScreen(b.contentTool);
+            } else if (id == R.id.nav_settings) {
+                showScreen(b.contentSettings);
+            } else if (id == R.id.nav_about) {
+                showScreen(b.contentAbout);
+            }
+            return true;
+        });
+
+        b.btnOpenAbout.setOnClickListener(v -> {
+            b.bottomNav.setSelectedItemId(R.id.nav_about);
+            showScreen(b.contentAbout);
+        });
+
+        b.tvVersion.setText("版本 " + BuildConfig.VERSION_NAME);
+        b.btnRepo.setOnClickListener(v -> {
+            Intent it = new Intent(Intent.ACTION_VIEW,
+                    Uri.parse("https://github.com/ikun656/LanFileTransfer"));
+            startActivity(it);
+        });
+    }
+
+    private void showScreen(android.view.View screen) {
+        b.contentTool.setVisibility(screen == b.contentTool ? android.view.View.VISIBLE : android.view.View.GONE);
+        b.contentSettings.setVisibility(screen == b.contentSettings ? android.view.View.VISIBLE : android.view.View.GONE);
+        b.contentAbout.setVisibility(screen == b.contentAbout ? android.view.View.VISIBLE : android.view.View.GONE);
     }
 
     private void requestPermissions() {

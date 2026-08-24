@@ -2,130 +2,265 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:orientation="vertical">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/app_name"
-        android:textSize="22sp"
-        android:textStyle="bold"
-        android:gravity="center"
-        android:layout_marginBottom="12dp" />
-
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tabs"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <!-- ===== 发送 ===== -->
-    <ScrollView
-        android:id="@+id/sendPanel"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        <LinearLayout
+        <!-- ===== 主页：工具（发送/接收） ===== -->
+        <ScrollView
+            android:id="@+id/contentTool"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="match_parent"
+            android:padding="16dp">
 
-            <Button
-                android:id="@+id/btnPick"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="选择文件" />
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/tvSendFile"
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/app_name"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:layout_marginBottom="12dp" />
+
+                <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/tabs"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <!-- 发送 -->
+                <LinearLayout
+                    android:id="@+id/sendPanel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginTop="8dp">
+
+                    <Button
+                        android:id="@+id/btnPick"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="选择文件" />
+
+                    <TextView
+                        android:id="@+id/tvSendFile"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="未选择文件"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/tvSendStatus"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:text="选择文件后启动发送，等待接收方连接。"
+                        android:textSize="14sp" />
+
+                    <ProgressBar
+                        android:id="@+id/progressSend"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:visibility="gone" />
+
+                    <Button
+                        android:id="@+id/btnStartSend"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:text="启动发送"
+                        android:enabled="false" />
+
+                    <Button
+                        android:id="@+id/btnStopSend"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="停止"
+                        android:visibility="gone" />
+                </LinearLayout>
+
+                <!-- 接收 -->
+                <LinearLayout
+                    android:id="@+id/recvPanel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginTop="8dp"
+                    android:visibility="gone">
+
+                    <Button
+                        android:id="@+id/btnScan"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="扫描发送方" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="发现的设备："
+                        android:textSize="14sp" />
+
+                    <ListView
+                        android:id="@+id/listDevices"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:layout_marginTop="8dp" />
+
+                    <TextView
+                        android:id="@+id/tvRecvStatus"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:text="点击扫描，发现后点列表里的设备即可接收。"
+                        android:textSize="14sp" />
+
+                    <ProgressBar
+                        android:id="@+id/progressRecv"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:visibility="gone" />
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+
+        <!-- ===== 设置 ===== -->
+        <ScrollView
+            android:id="@+id/contentSettings"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="16dp"
+            android:visibility="gone">
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="未选择文件"
-                android:textSize="14sp" />
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/tvSendStatus"
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="设置"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="12dp" />
+
+                <Button
+                    android:id="@+id/btnOpenAbout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="关于" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="传输说明"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:text="· 发现：UDP 广播，内容 LANFILE|IP:端口|设备名\n· 传输：TCP 直接发送文件，不经过任何服务器\n· 需两台设备处于同一 Wi-Fi"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="权限说明"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:text="· 网络：用于局域网通信\n· 存储：读取待发送文件、保存接收到的文件到 Download 目录"
+                    android:textSize="14sp" />
+            </LinearLayout>
+        </ScrollView>
+
+        <!-- ===== 关于 ===== -->
+        <ScrollView
+            android:id="@+id/contentAbout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="16dp"
+            android:visibility="gone">
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:text="选择文件后启动发送，等待接收方连接。"
-                android:textSize="14sp" />
+                android:orientation="vertical">
 
-            <ProgressBar
-                android:id="@+id/progressSend"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:visibility="gone" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/app_name"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    android:gravity="center" />
 
-            <Button
-                android:id="@+id/btnStartSend"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:text="启动发送"
-                android:enabled="false" />
+                <TextView
+                    android:id="@+id/tvVersion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center"
+                    android:textSize="14sp" />
 
-            <Button
-                android:id="@+id/btnStopSend"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="停止"
-                android:visibility="gone" />
-        </LinearLayout>
-    </ScrollView>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="纯原生 TCP + UDP 广播的局域网文件传输工具，不依赖服务器、不上云。"
+                    android:textSize="14sp" />
 
-    <!-- ===== 接收 ===== -->
-    <ScrollView
-        android:id="@+id/recvPanel"
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="许可"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:text="允许个人下载使用，不允许二次修改、再分发或商用。详见仓库 LICENSE。"
+                    android:textSize="14sp" />
+
+                <Button
+                    android:id="@+id/btnRepo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="在 GitHub 查看" />
+            </LinearLayout>
+        </ScrollView>
+    </FrameLayout>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNav"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:visibility="gone">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <Button
-                android:id="@+id/btnScan"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="扫描发送方" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="发现的设备："
-                android:textSize="14sp" />
-
-            <ListView
-                android:id="@+id/listDevices"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:layout_marginTop="8dp" />
-
-            <TextView
-                android:id="@+id/tvRecvStatus"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:text="点击扫描，发现后点列表里的设备即可接收。"
-                android:textSize="14sp" />
-
-            <ProgressBar
-                android:id="@+id/progressRecv"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:visibility="gone" />
-        </LinearLayout>
-    </ScrollView>
+        android:layout_height="wrap_content"
+        android:background="?android:attr/windowBackground"
+        app:menu="@menu/bottom_nav" />
 </LinearLayout>

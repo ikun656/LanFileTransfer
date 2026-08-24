@@ -16,7 +16,7 @@
 ```sh
 ./gradlew assembleRelease
 ```
-输出：`app/build/outputs/apk/release/app-release.apk`
+输出：`app/build/outputs/apk/release/LanFileTransfer-vX.Y.Z.apk`（文件名带版本号，与 git tag 一致）
 
 ## 自动编译与发布（GitHub Actions）
 - 推 `v*` 标签即触发：自动编译 release APK 并发布到 GitHub Release。
