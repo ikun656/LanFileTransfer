@@ -31,6 +31,7 @@
     <string name="language">语言</string>
     <string name="lang_zh">中文</string>
     <string name="lang_en">English</string>
+    <string name="follow_system">跟随系统</string>
 
     <string name="transfer_info_title">传输说明</string>
     <string name="transfer_info">· 发现：UDP 广播，内容 LANFILE|IP:端口|设备名\n· 传输：TCP 直接发送文件，不经过任何服务器\n· 需两台设备处于同一 Wi-Fi</string>

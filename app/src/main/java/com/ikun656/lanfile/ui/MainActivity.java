@@ -8,8 +8,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -99,6 +97,11 @@ public class MainActivity extends AppCompatActivity {
         });
 
         setupBottomNav();
+
+        if (getIntent().getBooleanExtra("open_settings", false)) {
+            b.bottomNav.setSelectedItemId(R.id.nav_settings);
+            showScreen(b.contentSettings);
+        }
     }
 
     private void setupBottomNav() {
@@ -112,20 +115,36 @@ public class MainActivity extends AppCompatActivity {
             return true;
         });
 
-        b.btnAbout.setOnClickListener(v -> startActivity(new Intent(this, AboutActivity.class)));
+        b.aboutRow.setOnClickListener(v -> startActivity(new Intent(this, AboutActivity.class)));
 
         SwitchCompat sw = b.switchTheme;
         sw.setChecked(AppPrefs.getThemeMode(this) == 2);
         sw.setOnCheckedChangeListener((btn, isChecked) ->
                 AppPrefs.setThemeMode(this, isChecked ? 2 : 1));
 
-        b.btnLangZh.setOnClickListener(v -> switchLang("zh"));
-        b.btnLangEn.setOnClickListener(v -> switchLang("en"));
+        updateLangValue();
+        b.langRow.setOnClickListener(v -> showLangDialog());
     }
 
-    private void switchLang(String lang) {
-        AppPrefs.setLang(this, lang);
-        recreate();
+    private void updateLangValue() {
+        String lang = AppPrefs.getLang(this);
+        b.tvLangValue.setText("zh".equals(lang) ? getString(R.string.lang_zh)
+                : "en".equals(lang) ? getString(R.string.lang_en) : getString(R.string.follow_system));
+    }
+
+    private void showLangDialog() {
+        String[] items = {getString(R.string.lang_zh), getString(R.string.lang_en)};
+        new androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle(R.string.language)
+                .setItems(items, (d, which) -> {
+                    String lang = which == 0 ? "zh" : "en";
+                    if (!lang.equals(AppPrefs.getLang(this))) {
+                        AppPrefs.setLang(this, lang);
+                        getIntent().putExtra("open_settings", true);
+                        recreate();
+                    }
+                })
+                .show();
     }
 
     private static int toNightMode(int mode) {
