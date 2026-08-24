@@ -172,7 +172,7 @@ public class MainActivity extends AppCompatActivity {
             }
         } else {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
-                    != PackageManager.PERMISSION.GRANTED)
+                    != PackageManager.PERMISSION_GRANTED)
                 needed.add(Manifest.permission.READ_EXTERNAL_STORAGE);
         }
         if (!needed.isEmpty()) permLauncher.launch(needed.toArray(new String[0]));

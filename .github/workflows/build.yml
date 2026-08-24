@@ -73,11 +73,25 @@ jobs:
             ~/.gradle/**/no-daemon/*.log
           if-no-files-found: ignore
 
+      - name: Extract changelog for this version
+        if: startsWith(github.ref, 'refs/tags/')
+        id: changelog
+        run: |
+          VER="${github.ref_name}"
+          awk -v v="## $VER" '
+            $0==v {f=1; next}
+            /^## / && f {exit}
+            f {print}
+          ' CHANGELOG.md > release_body.md
+          if [ ! -s release_body.md ]; then
+            echo "见 CHANGELOG.md" > release_body.md
+          fi
+
       - name: Create / update GitHub Release
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
           files: app/build/outputs/apk/release/*.apk
-          generate_release_notes: true
+          body_path: release_body.md
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
