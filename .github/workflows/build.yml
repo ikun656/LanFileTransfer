@@ -42,13 +42,33 @@ jobs:
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-        run: ./gradlew assembleRelease --no-daemon
+        run: ./gradlew assembleRelease --no-daemon --stacktrace 2>&1 | tee /tmp/gradle.log
+
+      - name: Show gradle errors on failure
+        if: failure()
+        run: |
+          echo "===== gradle.log tail ====="
+          tail -n 60 /tmp/gradle.log || true
+          echo "===== lint/compile output ====="
+          find app/build -name "*.txt" -exec echo "--- {} ---" \; -exec tail -n 30 {} \; 2>/dev/null || true
 
       - name: Upload APK artifact
+        if: success()
         uses: actions/upload-artifact@v4
         with:
           name: lanfile-apk
           path: app/build/outputs/apk/release/*.apk
+
+      - name: Upload build diagnostics on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-diagnostics
+          path: |
+            app/build/**/*.txt
+            app/build/**/*.html
+            ~/.gradle/**/no-daemon/*.log
+          if-no-files-found: ignore
 
       - name: Create / update GitHub Release
         if: startsWith(github.ref, 'refs/tags/')
