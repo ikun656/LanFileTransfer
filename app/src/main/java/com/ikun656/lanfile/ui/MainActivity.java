@@ -7,6 +7,11 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.webkit.DownloadListener;
+import android.webkit.ValueCallback;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -38,12 +43,15 @@ import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String WEB_URL = "https://ikun656.github.io/lan-file/lan-file.html";
+
     private ActivityMainBinding b;
 
     @Override
     protected void attachBaseContext(android.content.Context newBase) {
         super.attachBaseContext(AppPrefs.applyLocale(newBase));
     }
+
     private File pickedFile;
     private Sender sender;
     private Receiver receiver;
@@ -61,6 +69,15 @@ public class MainActivity extends AppCompatActivity {
 
     private final ActivityResultLauncher<String[]> permLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), r -> {
+            });
+
+    private ValueCallback<Uri[]> fileChooserCb;
+    private final ActivityResultLauncher<String> fileChooserLauncher =
+            registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
+                if (fileChooserCb != null) {
+                    fileChooserCb.onReceiveValue(uri != null ? new Uri[]{uri} : null);
+                    fileChooserCb = null;
+                }
             });
 
     @Override
@@ -97,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         setupBottomNav();
+        setupHomeMode();
 
         if (getIntent().getBooleanExtra("open_settings", false)) {
             b.bottomNav.setSelectedItemId(R.id.nav_settings);
@@ -104,11 +122,47 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void setupHomeMode() {
+        WebSettings ws = b.webView.getSettings();
+        ws.setJavaScriptEnabled(true);
+        ws.setDomStorageEnabled(true);
+        ws.setAllowFileAccess(true);
+        ws.setMixedContentMode(WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE);
+        ws.setUserAgentString(ws.getUserAgentString() + " LanFileTransfer/" + BuildConfig.VERSION_NAME);
+        b.webView.setWebChromeClient(new WebChromeClient() {
+            @Override
+            public boolean onShowFileChooser(WebView w, ValueCallback<Uri[]> cb,
+                                             android.webkit.WebChromeClient.FileChooserParams params) {
+                fileChooserCb = cb;
+                fileChooserLauncher.launch("*/*");
+                return true;
+            }
+        });
+        b.webView.setDownloadListener((url, userAgent, contentDisposition, mimeType, length) -> {
+            try {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+            } catch (Exception ignored) {}
+        });
+        b.webView.loadUrl(WEB_URL);
+
+        b.btnModeLan.setOnClickListener(v -> showHomeMode(0));
+        b.btnModeWeb.setOnClickListener(v -> showHomeMode(1));
+        showHomeMode(0);
+    }
+
+    private void showHomeMode(int mode) {
+        boolean web = mode == 1;
+        b.contentLan.setVisibility(web ? android.view.View.GONE : android.view.View.VISIBLE);
+        b.contentWeb.setVisibility(web ? android.view.View.VISIBLE : android.view.View.GONE);
+        b.btnModeLan.setAlpha(web ? 0.5f : 1f);
+        b.btnModeWeb.setAlpha(web ? 1f : 0.5f);
+    }
+
     private void setupBottomNav() {
         b.bottomNav.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
             if (id == R.id.nav_tool) {
-                showScreen(b.contentTool);
+                showScreen(b.contentHome);
             } else if (id == R.id.nav_settings) {
                 showScreen(b.contentSettings);
             }
@@ -116,6 +170,11 @@ public class MainActivity extends AppCompatActivity {
         });
 
         b.aboutRow.setOnClickListener(v -> startActivity(new Intent(this, AboutActivity.class)));
+        b.webRow.setOnClickListener(v -> {
+            b.bottomNav.setSelectedItemId(R.id.nav_tool);
+            showScreen(b.contentHome);
+            showHomeMode(1);
+        });
 
         SwitchCompat sw = b.switchTheme;
         sw.setChecked(AppPrefs.getThemeMode(this) == 2);
@@ -158,7 +217,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showScreen(android.view.View screen) {
-        b.contentTool.setVisibility(screen == b.contentTool ? android.view.View.VISIBLE : android.view.View.GONE);
+        b.contentHome.setVisibility(screen == b.contentHome ? android.view.View.VISIBLE : android.view.View.GONE);
         b.contentSettings.setVisibility(screen == b.contentSettings ? android.view.View.VISIBLE : android.view.View.GONE);
     }
 
@@ -299,5 +358,6 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         if (sender != null) sender.stop();
         if (receiver != null) receiver.stopDiscover();
+        if (b.webView != null) b.webView.destroy();
     }
 }

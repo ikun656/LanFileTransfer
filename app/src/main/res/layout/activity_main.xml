@@ -7,16 +7,42 @@
     android:fitsSystemWindows="true">
 
     <FrameLayout
+        android:id="@+id/contentHome"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        <!-- ===== 主页：工具（发送/接收） ===== -->
+        <!-- ===== 主页：模式切换 ===== -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="16dp">
+
+            <Button
+                android:id="@+id/btnModeLan"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="6dp"
+                android:text="@string/mode_lan" />
+
+            <Button
+                android:id="@+id/btnModeWeb"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="6dp"
+                android:text="@string/mode_web" />
+        </LinearLayout>
+
+        <!-- ===== 主页：局域网直连（发送/接收） ===== -->
         <ScrollView
-            android:id="@+id/contentTool"
+            android:id="@+id/contentLan"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="16dp">
+            android:padding="16dp"
+            android:paddingTop="72dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -139,6 +165,29 @@
             </LinearLayout>
         </ScrollView>
 
+        <!-- ===== 主页：网页版互传（内嵌 WebView） ===== -->
+        <FrameLayout
+            android:id="@+id/contentWeb"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/tvWebLoading"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="@string/web_loading"
+                android:textSize="15sp"
+                android:textColor="?android:attr/textColorSecondary" />
+
+            <WebView
+                android:id="@+id/webView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </FrameLayout>
+
         <!-- ===== 设置 ===== -->
         <ScrollView
             android:id="@+id/contentSettings"
@@ -238,6 +287,35 @@
                         android:textSize="15sp"
                         android:textColor="?android:attr/textColorSecondary" />
                 </LinearLayout>
+
+                <!-- 网页版 行 -->
+                <LinearLayout
+                    android:id="@+id/webRow"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingVertical="14dp"
+                    android:background="?attr/selectableItemBackground">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/settings_web"
+                        android:textSize="15sp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="›"
+                        android:textSize="20sp"
+                        android:textColor="?android:attr/textColorSecondary" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="?android:attr/listDivider" />
 
                 <TextView
                     android:layout_width="match_parent"

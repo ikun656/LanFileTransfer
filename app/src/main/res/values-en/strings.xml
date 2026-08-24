@@ -25,6 +25,12 @@
     <string name="nav_tool">Home</string>
     <string name="nav_settings">Settings</string>
 
+    <string name="mode_lan">LAN Direct</string>
+    <string name="mode_web">Web Version</string>
+    <string name="web_loading">Loading web version…</string>
+    <string name="settings_web">Web Version</string>
+    <string name="web_desc">Open the web version inside the app to transfer with browser (uses web invite codes).</string>
+
     <string name="settings">Settings</string>
     <string name="about">About</string>
     <string name="theme_dark">Dark theme</string>

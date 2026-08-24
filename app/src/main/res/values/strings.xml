@@ -25,6 +25,12 @@
     <string name="nav_tool">主页</string>
     <string name="nav_settings">设置</string>
 
+    <string name="mode_lan">局域网直连</string>
+    <string name="mode_web">网页版互传</string>
+    <string name="web_loading">网页版加载中…</string>
+    <string name="settings_web">网页版</string>
+    <string name="web_desc">在应用内打开网页版，可与电脑 / 手机浏览器互传（使用网页版邀请码）。</string>
+
     <string name="settings">设置</string>
     <string name="about">关于</string>
     <string name="theme_dark">暗色主题</string>
