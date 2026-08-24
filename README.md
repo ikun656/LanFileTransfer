@@ -1,5 +1,7 @@
 # 局域网传文件（Android）
 
+[English](README_en.md)
+
 纯原生 TCP + UDP 广播的局域网文件传输 App，不依赖任何服务器、不上云、不需要账号。
 
 ## 使用
