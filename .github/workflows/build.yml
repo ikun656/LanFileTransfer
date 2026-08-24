@@ -77,7 +77,7 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         id: changelog
         run: |
-          VER="${github.ref_name}"
+          VER="${{ github.ref_name }}"
           awk -v v="## $VER" '
             $0==v {f=1; next}
             /^## / && f {exit}
