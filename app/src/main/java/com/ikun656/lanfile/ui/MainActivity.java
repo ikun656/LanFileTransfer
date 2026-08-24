@@ -162,9 +162,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void requestPermissions() {
         List<String> needed = new ArrayList<>();
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.INTERNET)
-                != PackageManager.PERMISSION_GRANTED) needed.add(Manifest.permission.INTERNET);
-        // 安卓 13+ 读媒体权限；低版本在 manifest 已声明
         if (Build.VERSION.SDK_INT >= 33) {
             for (String p : new String[]{
                     Manifest.permission.READ_MEDIA_IMAGES,
@@ -173,6 +170,10 @@ public class MainActivity extends AppCompatActivity {
                 if (ContextCompat.checkSelfPermission(this, p) != PackageManager.PERMISSION_GRANTED)
                     needed.add(p);
             }
+        } else {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION.GRANTED)
+                needed.add(Manifest.permission.READ_EXTERNAL_STORAGE);
         }
         if (!needed.isEmpty()) permLauncher.launch(needed.toArray(new String[0]));
     }
