@@ -98,19 +98,12 @@ public class MainActivity extends AppCompatActivity {
                 showScreen(b.contentTool);
             } else if (id == R.id.nav_settings) {
                 showScreen(b.contentSettings);
-            } else if (id == R.id.nav_about) {
-                showScreen(b.contentAbout);
             }
             return true;
         });
 
-        b.btnOpenAbout.setOnClickListener(v -> {
-            b.bottomNav.setSelectedItemId(R.id.nav_about);
-            showScreen(b.contentAbout);
-        });
-
         b.tvVersion.setText("版本 " + BuildConfig.VERSION_NAME);
-        b.btnRepo.setOnClickListener(v -> {
+        b.tvRepo.setOnClickListener(v -> {
             Intent it = new Intent(Intent.ACTION_VIEW,
                     Uri.parse("https://github.com/ikun656/LanFileTransfer"));
             startActivity(it);
@@ -120,7 +113,6 @@ public class MainActivity extends AppCompatActivity {
     private void showScreen(android.view.View screen) {
         b.contentTool.setVisibility(screen == b.contentTool ? android.view.View.VISIBLE : android.view.View.GONE);
         b.contentSettings.setVisibility(screen == b.contentSettings ? android.view.View.VISIBLE : android.view.View.GONE);
-        b.contentAbout.setVisibility(screen == b.contentAbout ? android.view.View.VISIBLE : android.view.View.GONE);
     }
 
     private void requestPermissions() {
