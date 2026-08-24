@@ -14,6 +14,7 @@ public class Receiver {
 
     public interface DiscoverListener {
         void onFound(Protocol.Beacon beacon);
+        void onError(String msg);
     }
 
     public interface ReceiveListener {

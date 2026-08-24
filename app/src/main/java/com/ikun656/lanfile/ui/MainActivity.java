@@ -52,6 +52,10 @@ public class MainActivity extends AppCompatActivity {
                 b.btnStartSend.setEnabled(pickedFile != null);
             });
 
+    private final Intent pickMimeIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT)
+            .addCategory(Intent.CATEGORY_OPENABLE)
+            .setType("*/*");
+
     private final ActivityResultLauncher<String[]> permLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), r -> {
             });
@@ -79,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
         deviceAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, new ArrayList<>());
         b.listDevices.setAdapter(deviceAdapter);
 
-        b.btnPick.setOnClickListener(v -> pickLauncher.launch(new String[]{"*/*"}));
+        b.btnPick.setOnClickListener(v -> pickLauncher.launch(pickMimeIntent));
         b.btnStartSend.setOnClickListener(v -> startSend());
         b.btnStopSend.setOnClickListener(v -> stopSend());
         b.btnScan.setOnClickListener(v -> startDiscover());
