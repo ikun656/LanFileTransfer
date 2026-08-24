@@ -1,7 +1,6 @@
 package com.ikun656.lanfile.ui;
 
 import android.Manifest;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
@@ -44,17 +43,13 @@ public class MainActivity extends AppCompatActivity {
     private final List<Protocol.Beacon> beacons = new ArrayList<>();
     private ArrayAdapter<String> deviceAdapter;
 
-    private final ActivityResultLauncher<Intent> pickLauncher =
+    private final ActivityResultLauncher<String[]> pickLauncher =
             registerForActivityResult(new ActivityResultContracts.OpenDocument(), uri -> {
                 if (uri == null) return;
                 pickedFile = uriToFile(uri);
                 b.tvSendFile.setText("已选：" + queryDisplayName(uri));
                 b.btnStartSend.setEnabled(pickedFile != null);
             });
-
-    private final Intent pickMimeIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT)
-            .addCategory(Intent.CATEGORY_OPENABLE)
-            .setType("*/*");
 
     private final ActivityResultLauncher<String[]> permLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), r -> {
@@ -83,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
         deviceAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, new ArrayList<>());
         b.listDevices.setAdapter(deviceAdapter);
 
-        b.btnPick.setOnClickListener(v -> pickLauncher.launch(pickMimeIntent));
+        b.btnPick.setOnClickListener(v -> pickLauncher.launch(new String[]{"*/*"}));
         b.btnStartSend.setOnClickListener(v -> startSend());
         b.btnStopSend.setOnClickListener(v -> stopSend());
         b.btnScan.setOnClickListener(v -> startDiscover());
@@ -165,6 +160,9 @@ public class MainActivity extends AppCompatActivity {
                     beacons.add(beacon);
                     runOnUiThread(() -> deviceAdapter.add(beacon.toString()));
                 }
+            }
+            public void onError(String msg) {
+                runOnUiThread(() -> Toast.makeText(MainActivity.this, "扫描出错：" + msg, Toast.LENGTH_SHORT).show());
             }
         });
         Toast.makeText(this, "正在扫描，发现设备会显示在列表中", Toast.LENGTH_SHORT).show();
