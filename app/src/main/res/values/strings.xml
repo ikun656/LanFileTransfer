@@ -2,4 +2,48 @@
     <string name="app_name">局域网传文件</string>
     <string name="mode_send">发送文件</string>
     <string name="mode_receive">接收文件</string>
+
+    <string name="btn_pick">选择文件</string>
+    <string name="btn_start_send">启动发送</string>
+    <string name="btn_stop">停止</string>
+    <string name="btn_scan">扫描发送方</string>
+    <string name="found_devices">发现的设备：</string>
+    <string name="hint_pick_first">请先选择文件</string>
+    <string name="hint_wifi">建议连接同一 Wi-Fi 后使用</string>
+    <string name="status_wait_send">选择文件后启动发送，等待接收方连接。</string>
+    <string name="status_ready">发送已就绪</string>
+    <string name="status_sent">文件已发送完成</string>
+    <string name="status_stopped">已停止</string>
+    <string name="recv_wait">点击扫描，发现后点列表里的设备即可接收。</string>
+    <string name="recv_scanning">正在扫描，发现设备会显示在列表中</string>
+    <string name="recv_connecting">连接 %1$s 接收中…</string>
+    <string name="recv_done">接收完成：%1$s\n已保存到 Download 目录</string>
+    <string name="recv_fail">接收失败：%1$s</string>
+    <string name="scan_error">扫描出错：%1$s</string>
+    <string name="read_fail">读取文件失败：%1$s</string>
+
+    <string name="nav_tool">主页</string>
+    <string name="nav_settings">设置</string>
+
+    <string name="settings">设置</string>
+    <string name="about">关于</string>
+    <string name="theme_dark">暗色主题</string>
+    <string name="language">语言</string>
+    <string name="lang_zh">中文</string>
+    <string name="lang_en">English</string>
+
+    <string name="transfer_info_title">传输说明</string>
+    <string name="transfer_info">· 发现：UDP 广播，内容 LANFILE|IP:端口|设备名\n· 传输：TCP 直接发送文件，不经过任何服务器\n· 需两台设备处于同一 Wi-Fi</string>
+    <string name="permission_title">权限说明</string>
+    <string name="permission_info">· 网络：用于局域网通信\n· 存储：读取待发送文件、保存接收到的文件到 Download 目录</string>
+    <string name="about_hint">点击上方“关于”查看版本、开源项目与许可信息。</string>
+
+    <string name="about_title">关于</string>
+    <string name="about_desc">纯原生 TCP + UDP 广播的局域网文件传输工具，不依赖服务器、不上云。</string>
+    <string name="oss_title">开源项目</string>
+    <string name="oss_list">本应用使用了以下开源项目：\n\nAndroidX AppCompat\n  Apache-2.0  https://developer.android.com/jetpack/androidx\n\nMaterial Components for Android\n  Apache-2.0  https://github.com/material-components/material-components-android\n\nAndroidX ConstraintLayout\n  Apache-2.0  https://developer.android.com/jetpack/androidx\n\nGradle\n  Apache-2.0  https://gradle.org\n\nAndroid Gradle Plugin\n  Apache-2.0  https://android.googlesource.com/platform/tools/base</string>
+    <string name="license_title">许可</string>
+    <string name="license_text">允许个人下载使用，不允许二次修改、再分发或商用。详见仓库 LICENSE。</string>
+    <string name="repo_hint">在 GitHub 查看：github.com/ikun656/LanFileTransfer</string>
+    <string name="back">返回</string>
 </resources>

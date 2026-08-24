@@ -48,14 +48,14 @@
                         android:id="@+id/btnPick"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="选择文件" />
+                        android:text="@string/btn_pick" />
 
                     <TextView
                         android:id="@+id/tvSendFile"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="未选择文件"
+                        android:text="@string/hint_pick_first"
                         android:textSize="14sp" />
 
                     <TextView
@@ -63,7 +63,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:text="选择文件后启动发送，等待接收方连接。"
+                        android:text="@string/status_wait_send"
                         android:textSize="14sp" />
 
                     <ProgressBar
@@ -79,7 +79,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:text="启动发送"
+                        android:text="@string/btn_start_send"
                         android:enabled="false" />
 
                     <Button
@@ -87,7 +87,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="停止"
+                        android:text="@string/btn_stop"
                         android:visibility="gone" />
                 </LinearLayout>
 
@@ -104,13 +104,13 @@
                         android:id="@+id/btnScan"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="扫描发送方" />
+                        android:text="@string/btn_scan" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="发现的设备："
+                        android:text="@string/found_devices"
                         android:textSize="14sp" />
 
                     <ListView
@@ -124,7 +124,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:text="点击扫描，发现后点列表里的设备即可接收。"
+                        android:text="@string/recv_wait"
                         android:textSize="14sp" />
 
                     <ProgressBar
@@ -138,7 +138,7 @@
             </LinearLayout>
         </ScrollView>
 
-        <!-- ===== 设置（含关于） ===== -->
+        <!-- ===== 设置 ===== -->
         <ScrollView
             android:id="@+id/contentSettings"
             android:layout_width="match_parent"
@@ -154,15 +154,69 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="设置"
+                    android:text="@string/settings"
                     android:textSize="20sp"
                     android:textStyle="bold"
                     android:layout_marginBottom="12dp" />
 
+                <Button
+                    android:id="@+id/btnAbout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/about" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="16dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/theme_dark"
+                        android:textSize="15sp" />
+
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/switchTheme"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="12dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/language"
+                        android:textSize="15sp" />
+
+                    <Button
+                        android:id="@+id/btnLangZh"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/lang_zh" />
+                    <Button
+                        android:id="@+id/btnLangEn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/lang_en"
+                        android:layout_marginStart="8dp" />
+                </LinearLayout>
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="传输说明"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/transfer_info_title"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
@@ -170,14 +224,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
-                    android:text="· 发现：UDP 广播，内容 LANFILE|IP:端口|设备名\n· 传输：TCP 直接发送文件，不经过任何服务器\n· 需两台设备处于同一 Wi-Fi"
+                    android:text="@string/transfer_info"
                     android:textSize="14sp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:text="权限说明"
+                    android:text="@string/permission_title"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
@@ -185,36 +239,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
-                    android:text="· 网络：用于局域网通信\n· 存储：读取待发送文件、保存接收到的文件到 Download 目录"
+                    android:text="@string/permission_info"
                     android:textSize="14sp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    android:text="关于"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tvVersion"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:text="纯原生 TCP + UDP 广播的局域网文件传输工具，不依赖服务器、不上云。"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:text="许可"
+                    android:text="@string/about"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
@@ -222,18 +254,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
-                    android:text="允许个人下载使用，不允许二次修改、再分发或商用。详见仓库 LICENSE。"
+                    android:text="@string/about_hint"
                     android:textSize="14sp" />
-
-                <TextView
-                    android:id="@+id/tvRepo"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:text="在 GitHub 查看：github.com/ikun656/LanFileTransfer"
-                    android:textSize="14sp"
-                    android:textColor="?attr/colorPrimary"
-                    android:autoLink="web" />
             </LinearLayout>
         </ScrollView>
     </FrameLayout>

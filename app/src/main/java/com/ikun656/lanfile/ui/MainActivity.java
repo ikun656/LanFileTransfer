@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -17,9 +18,11 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.content.ContextCompat;
 
 import com.google.android.material.tabs.TabLayout;
+import com.ikun656.lanfile.AppPrefs;
 import com.ikun656.lanfile.BuildConfig;
 import com.ikun656.lanfile.R;
 import com.ikun656.lanfile.databinding.ActivityMainBinding;
@@ -37,6 +40,11 @@ import java.util.Set;
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding b;
+
+    @Override
+    protected void attachBaseContext(android.content.Context newBase) {
+        super.attachBaseContext(AppPrefs.applyLocale(newBase));
+    }
     private File pickedFile;
     private Sender sender;
     private Receiver receiver;
@@ -58,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        AppCompatDelegate.setDefaultNightMode(toNightMode(AppPrefs.getThemeMode(this)));
         super.onCreate(savedInstanceState);
         b = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(b.getRoot());
@@ -102,12 +111,28 @@ public class MainActivity extends AppCompatActivity {
             return true;
         });
 
-        b.tvVersion.setText("版本 " + BuildConfig.VERSION_NAME);
-        b.tvRepo.setOnClickListener(v -> {
-            Intent it = new Intent(Intent.ACTION_VIEW,
-                    Uri.parse("https://github.com/ikun656/LanFileTransfer"));
-            startActivity(it);
-        });
+        b.btnAbout.setOnClickListener(v -> startActivity(new Intent(this, AboutActivity.class)));
+
+        SwitchCompat sw = b.switchTheme;
+        sw.setChecked(AppPrefs.getThemeMode(this) == 2);
+        sw.setOnCheckedChangeListener((btn, isChecked) ->
+                AppPrefs.setThemeMode(this, isChecked ? 2 : 1));
+
+        b.btnLangZh.setOnClickListener(v -> switchLang("zh"));
+        b.btnLangEn.setOnClickListener(v -> switchLang("en"));
+    }
+
+    private void switchLang(String lang) {
+        AppPrefs.setLang(this, lang);
+        recreate();
+    }
+
+    private static int toNightMode(int mode) {
+        switch (mode) {
+            case 1: return AppCompatDelegate.MODE_NIGHT_NO;
+            case 2: return AppCompatDelegate.MODE_NIGHT_YES;
+            default: return AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM;
+        }
     }
 
     private void showScreen(android.view.View screen) {
@@ -134,24 +159,24 @@ public class MainActivity extends AppCompatActivity {
 
     private void startSend() {
         if (pickedFile == null) {
-            Toast.makeText(this, "请先选择文件", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.hint_pick_first), Toast.LENGTH_SHORT).show();
             return;
         }
         if (!LanNet.isWifiConnected(this)) {
-            Toast.makeText(this, "建议连接同一 Wi-Fi 后使用", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.hint_wifi), Toast.LENGTH_LONG).show();
         }
         b.btnStartSend.setVisibility(android.view.View.GONE);
         b.btnStopSend.setVisibility(android.view.View.VISIBLE);
         b.progressSend.setVisibility(android.view.View.VISIBLE);
         b.progressSend.setProgress(0);
-        b.tvSendStatus.setText("启动中…");
+        b.tvSendStatus.setText(getString(R.string.status_ready) + "…");
 
-        // 由于用 OpenDocument 的 URI，需把文件内容落到一个临时可读文件
         File src = pickedFile;
         sender = new Sender(src, Build.MODEL);
         sender.start(new Sender.Listener() {
             public void onReady(String ip, int port) {
-                runOnUiThread(() -> b.tvSendStatus.setText("发送已就绪，地址 " + ip + ":" + port + "\n等待接收方连接…"));
+                runOnUiThread(() -> b.tvSendStatus.setText(
+                        getString(R.string.status_ready) + "，" + ip + ":" + port + "\n" + getString(R.string.recv_wait)));
             }
             public void onProgress(long sent, long total) {
                 runOnUiThread(() -> {
@@ -159,10 +184,10 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
             public void onSent() {
-                runOnUiThread(() -> b.tvSendStatus.setText("文件已发送完成 ✓"));
+                runOnUiThread(() -> b.tvSendStatus.setText(getString(R.string.status_sent)));
             }
             public void onError(String msg) {
-                runOnUiThread(() -> b.tvSendStatus.setText("错误：" + msg));
+                runOnUiThread(() -> b.tvSendStatus.setText(getString(R.string.scan_error, msg)));
             }
         });
     }
@@ -172,7 +197,7 @@ public class MainActivity extends AppCompatActivity {
         b.btnStopSend.setVisibility(android.view.View.GONE);
         b.btnStartSend.setVisibility(android.view.View.VISIBLE);
         b.progressSend.setVisibility(android.view.View.GONE);
-        b.tvSendStatus.setText("已停止");
+        b.tvSendStatus.setText(getString(R.string.status_stopped));
     }
 
     private void startDiscover() {
@@ -189,10 +214,11 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
             public void onError(String msg) {
-                runOnUiThread(() -> Toast.makeText(MainActivity.this, "扫描出错：" + msg, Toast.LENGTH_SHORT).show());
+                runOnUiThread(() -> Toast.makeText(MainActivity.this,
+                        getString(R.string.scan_error, msg), Toast.LENGTH_SHORT).show());
             }
         });
-        Toast.makeText(this, "正在扫描，发现设备会显示在列表中", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(R.string.recv_scanning), Toast.LENGTH_SHORT).show();
     }
 
     private void receiveFrom(Protocol.Beacon beacon) {
@@ -200,7 +226,7 @@ public class MainActivity extends AppCompatActivity {
         if (!dir.exists()) dir.mkdirs();
         b.progressRecv.setVisibility(android.view.View.VISIBLE);
         b.progressRecv.setProgress(0);
-        b.tvRecvStatus.setText("连接 " + beacon.name + " 接收中…");
+        b.tvRecvStatus.setText(getString(R.string.recv_connecting, beacon.name));
         if (receiver == null) receiver = new Receiver();
         receiver.receive(beacon, dir, new Receiver.ReceiveListener() {
             public void onProgress(long got, long total) {
@@ -209,10 +235,10 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
             public void onDone(File file) {
-                runOnUiThread(() -> b.tvRecvStatus.setText("接收完成：" + file.getName() + "\n已保存到 Download 目录"));
+                runOnUiThread(() -> b.tvRecvStatus.setText(getString(R.string.recv_done, file.getName())));
             }
             public void onError(String msg) {
-                runOnUiThread(() -> b.tvRecvStatus.setText("接收失败：" + msg));
+                runOnUiThread(() -> b.tvRecvStatus.setText(getString(R.string.recv_fail, msg)));
             }
         });
     }
@@ -229,7 +255,7 @@ public class MainActivity extends AppCompatActivity {
             }
             return tmp;
         } catch (Exception e) {
-            Toast.makeText(this, "读取文件失败：" + e.getMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.read_fail, e.getMessage()), Toast.LENGTH_LONG).show();
             return null;
         }
     }
