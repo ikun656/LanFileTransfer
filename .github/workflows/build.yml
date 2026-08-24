@@ -9,6 +9,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -42,15 +44,15 @@ jobs:
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-        run: ./gradlew assembleRelease --no-daemon --stacktrace 2>&1 | tee /tmp/gradle.log
+        run: ./gradlew assembleRelease --no-daemon --stacktrace
 
       - name: Show gradle errors on failure
         if: failure()
         run: |
-          echo "===== gradle.log tail ====="
-          tail -n 60 /tmp/gradle.log || true
-          echo "===== lint/compile output ====="
-          find app/build -name "*.txt" -exec echo "--- {} ---" \; -exec tail -n 30 {} \; 2>/dev/null || true
+          echo "===== find compile/lint reports ====="
+          find app/build -name "*.txt" -o -name "*.html" 2>/dev/null | head -20
+          echo "===== dump any report tails ====="
+          find app/build/reports -type f 2>/dev/null | while read f; do echo "--- $f ---"; tail -n 30 "$f"; done || true
 
       - name: Upload APK artifact
         if: success()
