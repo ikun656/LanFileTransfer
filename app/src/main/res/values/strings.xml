@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">局域网传文件</string>
+    <string name="mode_send">发送文件</string>
+    <string name="mode_receive">接收文件</string>
+</resources>

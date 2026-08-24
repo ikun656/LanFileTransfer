@@ -1,0 +1,56 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.ikun656.lanfile'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.ikun656.lanfile"
+        minSdk 21
+        targetSdk 34
+        versionCode 1
+        versionName "1.0.0"
+    }
+
+    // 签名配置从环境变量/CI secrets 读取；本地未配置时回退到 debug 默认签名
+    signingConfigs {
+        release {
+            def ks = System.getenv("KEYSTORE_BASE64")
+            if (ks != null && !ks.isEmpty()) {
+                def ksFile = file("$buildDir/ci_keystore.jks")
+                ksFile.parentFile.mkdirs()
+                ksFile.bytes = Base64.decoder.decode(ks)
+                storeFile ksFile
+                storePassword System.getenv("KEYSTORE_PASSWORD")
+                keyAlias System.getenv("KEY_ALIAS")
+                keyPassword System.getenv("KEY_PASSWORD")
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            if (signingConfigs.release.storeFile != null) {
+                signingConfig signingConfigs.release
+            }
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    buildFeatures {
+        viewBinding true
+    }
+}
+
+dependencies {
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'com.google.android.material:material:1.12.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+}
