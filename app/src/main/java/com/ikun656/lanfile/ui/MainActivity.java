@@ -119,8 +119,10 @@ public class MainActivity extends AppCompatActivity {
 
         SwitchCompat sw = b.switchTheme;
         sw.setChecked(AppPrefs.getThemeMode(this) == 2);
-        sw.setOnCheckedChangeListener((btn, isChecked) ->
-                AppPrefs.setThemeMode(this, isChecked ? 2 : 1));
+        sw.setOnCheckedChangeListener((btn, isChecked) -> {
+            getIntent().putExtra("open_settings", true);
+            AppPrefs.setThemeMode(this, isChecked ? 2 : 1);
+        });
 
         updateLangValue();
         b.langRow.setOnClickListener(v -> showLangDialog());

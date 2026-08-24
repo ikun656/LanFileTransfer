@@ -26,7 +26,7 @@ public class AboutActivity extends AppCompatActivity {
         ((TextView) findViewById(R.id.tvAboutVersion)).setText("版本 " + BuildConfig.VERSION_NAME);
         ((TextView) findViewById(R.id.tvOss)).setText(getString(R.string.oss_list));
 
-        findViewById(R.id.btnBack).setOnClickListener(v -> finish());
+        findViewById(R.id.backRow).setOnClickListener(v -> finish());
         findViewById(R.id.tvRepo).setOnClickListener(v -> {
             startActivity(new Intent(Intent.ACTION_VIEW,
                     Uri.parse("https://github.com/ikun656/LanFileTransfer")));
