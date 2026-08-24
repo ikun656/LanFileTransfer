@@ -6,12 +6,16 @@ android {
     namespace 'com.ikun656.lanfile'
     compileSdk 34
 
+    // 版本号跟随 git tag（CI 传入 VERSION_NAME=v1.2.3），本地构建回退 1.0.0
+    def tagVer = System.getenv("VERSION_NAME")
+    def versionName = (tagVer != null && tagVer.startsWith("v")) ? tagVer.substring(1) : "1.0.0"
+
     defaultConfig {
         applicationId "com.ikun656.lanfile"
         minSdk 21
         targetSdk 34
         versionCode 1
-        versionName "1.0.0"
+        versionName versionName
     }
 
     // 签名配置从环境变量/CI secrets 读取；本地未配置时回退到 debug 默认签名
@@ -36,6 +40,13 @@ android {
             if (signingConfigs.release.storeFile != null) {
                 signingConfig signingConfigs.release
             }
+        }
+    }
+
+    // 产物改名：LanFileTransfer-v<versionName>.apk
+    applicationVariants.all { variant ->
+        variant.outputs.all {
+            outputFileName = "LanFileTransfer-v${versionName}.apk"
         }
     }
 
