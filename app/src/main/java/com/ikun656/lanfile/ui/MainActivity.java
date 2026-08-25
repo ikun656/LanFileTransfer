@@ -43,7 +43,7 @@ import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String WEB_URL = "https://ikun656.github.io/lan-file/lan-file.html";
+    private static final String WEB_URL = "https://ikun656.github.io/lan-file/lan-file.html?from=app";
 
     private ActivityMainBinding b;
 
