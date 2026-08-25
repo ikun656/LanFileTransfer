@@ -143,19 +143,40 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
             } catch (Exception ignored) {}
         });
-        b.webView.loadUrl(WEB_URL);
+        b.webView.setWebViewClient(new android.webkit.WebViewClient() {
+            @Override
+            public void onPageStarted(android.webkit.WebView view, String url, android.graphics.Bitmap favicon) {
+                b.tvWebLoading.setVisibility(android.view.View.VISIBLE);
+            }
+            @Override
+            public void onPageFinished(android.webkit.WebView view, String url) {
+                b.tvWebLoading.setVisibility(android.view.View.GONE);
+            }
+        });
 
-        b.btnModeLan.setOnClickListener(v -> showHomeMode(0));
-        b.btnModeWeb.setOnClickListener(v -> showHomeMode(1));
+        b.modeTabs.addTab(b.modeTabs.newTab().setText(R.string.mode_lan));
+        b.modeTabs.addTab(b.modeTabs.newTab().setText(R.string.mode_web));
+        b.modeTabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            public void onTabSelected(TabLayout.Tab tab) { showHomeMode(tab.getPosition()); }
+            public void onTabUnselected(TabLayout.Tab tab) {}
+            public void onTabReselected(TabLayout.Tab tab) {}
+        });
         showHomeMode(0);
     }
+
+    private boolean webLoaded = false;
 
     private void showHomeMode(int mode) {
         boolean web = mode == 1;
         b.contentLan.setVisibility(web ? android.view.View.GONE : android.view.View.VISIBLE);
         b.contentWeb.setVisibility(web ? android.view.View.VISIBLE : android.view.View.GONE);
-        b.btnModeLan.setAlpha(web ? 0.5f : 1f);
-        b.btnModeWeb.setAlpha(web ? 1f : 0.5f);
+        if (web && !webLoaded) {
+            b.webView.loadUrl(WEB_URL);
+            webLoaded = true;
+        }
+        if (b.modeTabs.getSelectedTabPosition() != mode && b.modeTabs.getTabAt(mode) != null) {
+            b.modeTabs.selectTab(b.modeTabs.getTabAt(mode));
+        }
     }
 
     private void setupBottomNav() {
